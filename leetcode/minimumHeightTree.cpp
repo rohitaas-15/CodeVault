@@ -13,7 +13,40 @@ https://leetcode.com/problems/minimum-height-trees/description/
 using namespace std;
 
 vector<vector<int>> adj;
+int doBfs(int node, vector<int> &dis, vector<int> &par)
+{
+    int n = par.size() - 1;
+    queue<int> q;
+    q.push(node);
+    dis[node] = 0, par[node] = node;
+    while (!q.empty())
+    {
+        int node = q.front();
+        q.pop();
 
+        for (auto i : adj[node])
+        {
+            if (i != par[node])
+            {
+                dis[i] = dis[node] + 1;
+                par[i] = node;
+                q.push(i);
+            }
+        }
+    }
+
+    int mxIndex, mx = -1;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (dis[i] > mx)
+        {
+            mx = dis[i];
+            mxIndex = i;
+        }
+    }
+    return mxIndex;
+}
 class Solution
 {
 public:
@@ -27,69 +60,13 @@ public:
             adj[i[1]].push_back(i[0]);
         }
 
-        queue<int> q;
-
-        q.push(0);
         vector<int> dis(n + 1, 1e9), par(n + 1, -1);
-        dis[0] = 0, par[0] = 0;
 
-        while (!q.empty())
-        {
-            int node = q.front();
-            q.pop();
-
-            for (auto i : adj[node])
-            {
-                if (i != par[node])
-                {
-                    dis[i] = dis[node] + 1;
-                    par[i] = node;
-                    q.push(i);
-                }
-            }
-        }
-
-        int mxIndex, mx = -1;
-
-        for (int i = 0; i < n; i++)
-        {
-            if (dis[i] > mx)
-            {
-                mx = dis[i];
-                mxIndex = i;
-            }
-        }
+        int mxIndex = doBfs(0, dis, par);
 
         dis.clear(), dis.resize(n + 1, 1e9), par.clear(), par.resize(n + 1, -1);
 
-        q.push(mxIndex);
-        dis[mxIndex] = 0, par[mxIndex] = mxIndex;
-
-        while (!q.empty())
-        {
-            int node = q.front();
-            q.pop();
-
-            for (auto i : adj[node])
-            {
-                if (i != par[node])
-                {
-                    dis[i] = dis[node] + 1;
-                    par[i] = node;
-                    q.push(i);
-                }
-            }
-        }
-
-        mx = -1;
-        for (int i = 0; i < n; i++)
-        {
-            if (dis[i] > mx)
-            {
-                mx = dis[i];
-                mxIndex = i;
-            }
-        }
+        mxIndex = doBfs(mxIndex, dis, par);
 
         vector<int> path;
         int temp = mxIndex;
