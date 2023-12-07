@@ -76,7 +76,6 @@ void print(Arg1 &&arg1, Args &&...args);
 
 struct DSU
 {
-
     vector<int> par, rank;
     DSU(int n)
     {
