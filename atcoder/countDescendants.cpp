@@ -88,7 +88,6 @@ void print(vector<Arg1> x)
 }
 template <typename Arg1, typename... Args>
 void print(Arg1 &&arg1, Args &&...args)
-
 {
     _p = 1;
     print(arg1);
