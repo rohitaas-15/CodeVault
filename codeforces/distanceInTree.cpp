@@ -161,7 +161,7 @@ void solve()
         adj[y].push_back(x);
     }
     dfs(1, 0), reRoot(1, 0, k);
-    print(ans/2);
+    print(ans/2);// to take into account double counting of each pair
 }
 
 signed main()
