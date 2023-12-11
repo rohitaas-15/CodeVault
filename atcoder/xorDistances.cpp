@@ -46,7 +46,7 @@ void scan(Primitive &P)
     cin >> P;
 }
 template <typename Complex>
-void scan(vector<Complex> Vector)
+void scan(vector<Complex> &Vector)
 {
     for (Complex &C : Vector)
         scan(C);
