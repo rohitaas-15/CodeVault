@@ -8,7 +8,6 @@ Print number of nodes in the satisfied vertex set on one line.
 
 https://www.spoj.com/problems/PT07X/*/
 
-
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -90,7 +89,7 @@ void fill(Primitive Value, Complex &C, ComplexObjects &...list)
 
 const int N = 1e5 + 2;
 vector<int> adj[N];
-vector<vector<int>> dp(N, vector<int>(2));
+vector<vector<int>> dp(N, vector<int>(2)); // node i taken(dp[i][1]), not taken(dp[i][0])
 
 void dfs(int node, int par)
 {
