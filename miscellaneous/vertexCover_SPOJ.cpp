@@ -89,19 +89,17 @@ void fill(Primitive Value, Complex &C, ComplexObjects &...list)
 
 const int N = 1e5 + 2;
 vector<int> adj[N];
-vector<vector<int>> dp(N, vector<int>(2)); // node i taken(dp[i][1]), not taken(dp[i][0])
+vector<vector<int>> dp(N, {0, 1}); // node i taken(dp[i][1]), not taken(dp[i][0])
 
 void dfs(int node, int par)
 {
-    int nodeTaken = 1, nodeNotTaken = 0;
     for (auto i : adj[node])
         if (i != par)
         {
             dfs(i, node);
-            nodeTaken += min(dp[i][0], dp[i][1]);
-            nodeNotTaken += dp[i][1];
+            dp[node][0] += dp[i][1];
+            dp[node][1] += min(dp[i][0], dp[i][1]);
         }
-    dp[node] = {nodeNotTaken, nodeTaken};
 }
 
 void solve()
@@ -114,8 +112,6 @@ void solve()
         scan(x, y);
         adj[x].push_back(y), adj[y].push_back(x);
     }
-
-    fill(0ll, dp);
 
     dfs(1, 0);
     print(min(dp[1][0], dp[1][1]));
