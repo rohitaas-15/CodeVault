@@ -98,7 +98,7 @@ void dfs(int node, int par)
 {
     int taken = 0, nTaken = 0;
 
-    // first calculate the answer if no edge connected node is taken
+    // first calculate the answer if no edge connected to node is taken
     for (auto i : adj[node])
     {
         if (i != par)
@@ -108,7 +108,7 @@ void dfs(int node, int par)
         }
     }
 
-    // then calculate the answer if at max 1 edge connecting node is taken
+    // then calculate the answer if at max 1 edge connecting to node is taken
     for (auto i : adj[node])
     {
         if (i != par)
