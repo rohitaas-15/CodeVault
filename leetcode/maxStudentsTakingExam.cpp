@@ -17,7 +17,6 @@ struct edge
 
 struct Dinic
 {
-
     vector<vector<int>> adj;
     vector<int> level, vis;
     vector<edge> edges;
@@ -135,7 +134,7 @@ public:
 
         map<int, int> seen;
 
-        // for bipartite graph, maximum matching= min vertex cover, and complement of min vertex cover is maximum independent set
+// for bipartite graph, maximum matching= min vertex cover, and complement of min vertex cover is maximum independent set
 
         for (int i = 0; i < n; i++)
         {
@@ -152,7 +151,8 @@ public:
                             {
                                 int fVal = getVal(i, j), sVal = getVal(k, l);
 
-                                if (j % 2 == 1)
+                                if (j % 2 == 1) //maintain edges from group 1(even number column) to group 2(odd number column)
+                                                //as the graph is bipartite
                                 {
                                     swap(sVal, fVal);
                                 }
