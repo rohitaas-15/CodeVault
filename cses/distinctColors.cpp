@@ -97,21 +97,13 @@ void dfs(int node, int par)
 void update(int index,int val)
 {
     int i =index;
-    while(i<N)
-    {
-        BIT[i]+=val;
-        i+=i&(-i);
-    }
+    while(i<N) BIT[i]+=val, i+=i&(-i);
 }
 
 int query(int index)
 {
     int i = index,ans=0;
-    while(i>0)
-    {
-        ans += BIT[i];
-        i-=i&(-i);
-    }
+    while(i>0)  ans += BIT[i],i-=i&(-i);
     return ans;
 }
 
