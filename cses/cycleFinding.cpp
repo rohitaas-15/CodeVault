@@ -1,18 +1,17 @@
-/*Your task is to find a minimum-price flight route from Syrjälä to Metsälä. You have one discount coupon, using which you can halve the price of any single flight during the route. However, you can only use the coupon once.
-When you use the discount coupon for a flight whose price is x, its price becomes \lfloor x/2 \rfloor (it is rounded down to an integer).
+/*You are given a directed graph, and your task is to find out if it contains a negative cycle, and also give an example of such a cycle.
 Input
-The first input line has two integers n and m: the number of cities and flight connections. The cities are numbered 1,2,\ldots,n. City 1 is Syrjälä, and city n is Metsälä.
-After this there are m lines describing the flights. Each line has three integers a, b, and c: a flight begins at city a, ends at city b, and its price is c. Each flight is unidirectional.
-You can assume that it is always possible to get from Syrjälä to Metsälä.
+The first input line has two integers n and m: the number of nodes and edges. The nodes are numbered 1,2,\ldots,n.
+After this, the input has m lines describing the edges. Each line has three integers a, b, and c: there is an edge from node a to node b whose length is c.
 Output
-Print one integer: the price of the cheapest route from Syrjälä to Metsälä.
+If the graph contains a negative cycle, print first "YES", and then the nodes in the cycle in their correct order. If there are several negative cycles, you can print any of them. If there are no negative cycles, print "NO".
 Constraints
 
-2 \le n \le 10^5
-1 \le m \le 2 \cdot 10^5
+1 \le n \le 2500
+1 \le m \le 5000
 1 \le a,b \le n
-1 \le c \le 10^9
-https://cses.fi/problemset/task/1195/*/
+-10^9 \le c \le 10^9
+https://cses.fi/problemset/task/1197/*/
+
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -83,10 +82,11 @@ void fill(Primitive Value, Complex &C, ComplexObjects &...list)
 }
 //-------------------------------------------------------------------------------
 
-const int N = 1e5 + 2;
+const int N = 2502;
 int n, m;
+vector<int> dis(N, INF), par(N, -1), freq(N, 0);
+vector<vector<int>> edges;
 vector<vector<vector<int>>> adj(N);
-vector<vector<int>> dp(N, vector<int>(2, INF)), Max(N, vector<int>(2, 0));
 
 void solve()
 {
@@ -95,38 +95,60 @@ void solve()
     {
         int x, y, w;
         cin >> x >> y >> w;
-        adj[x].push_back({y, w});
+        edges.push_back({x, y, w});
     }
 
-    set<vector<int>> s;
-    s.insert({0, 1, 0});
-    dp[1][0] = dp[1][1] = 0;
-
-    while (!s.empty())
+    for (int node = 1; node <= n; node++) // bellman ford
     {
-        auto node = *(s.begin());
-        s.erase(node);
-        int from = node[1], mx = node[2];
-        for (auto i : adj[from])
-        {
-            int to = i[0], w = i[1], mxTillNow = max(mx, w);
+        fill(INF, dis), fill(-1ll, par);
+        dis[node] = 0;
 
-            if (dp[from][0] + w < dp[to][0])
+        int cnt = 0;
+        while (++cnt)
+        {
+            int flag = 0, changed;
+
+            for (auto i : edges)
             {
-                s.erase({dp[to][0], to, Max[to][0]});
-                Max[to][0] = mxTillNow, dp[to][0] = dp[from][0] + w;
-                s.insert({dp[to][0], to, Max[to][0]});
+                if (dis[i[0]] + i[2] < dis[i[1]])
+                {
+                    flag = 1;
+                    dis[i[1]] = dis[i[0]] + i[2];
+                    par[i[1]] = i[0], changed = i[1];
+
+                    if (cnt == n)
+                        break;
+                }
             }
-            int useCouponCase = min(dp[from][1] + w, dp[from][0] + w / 2);
-            if (useCouponCase < dp[to][1])
+            if (!flag)
             {
-                s.erase({dp[to][1], to, Max[to][1]});
-                Max[to][1] = mxTillNow, dp[to][1] = useCouponCase;
-                s.insert({dp[to][1], to, Max[to][1]});
+                break;
+            }
+
+            if (cnt == n)
+            {
+                int temp = changed;
+                vector<int> path;
+                while (!freq[temp])
+                {
+                    path.push_back(temp);
+                    freq[temp]++;
+                    temp = par[temp];
+                }
+
+                path.push_back(temp);
+                reverse(all(path));
+
+                while (path[path.size() - 1] != temp)
+                {
+                    path.pop_back();
+                }
+                print("YES"), print(path), exit(0);
             }
         }
     }
-    print(dp[n][1]);
+
+    print("NO");
 }
 
 signed main()
