@@ -5,7 +5,7 @@ You have been required to fill a Knapsack with these stones. The Knapsack can ho
 You are required to select exactly 'M' stones; one of each color. The sum of the weights of the stones must not exceed 'X'. Since you paid a premium for a Knapsack with capacity 'X', you are required to fill the Knapsack as much as possible.
 
 Write a program to calculate the best way to fill the Knapsack - that is, the unused capacity should be minimized.*/
-//https://www.codingninjas.com/studio/problems/colorful-knapsack_630415?leftPanelTabValue=PROBLEM
+// https://www.codingninjas.com/studio/problems/colorful-knapsack_630415?leftPanelTabValue=PROBLEM
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -21,28 +21,23 @@ int colorfulKnapsack(int w[], int c[], int n, int m, int x)
         colNos[c[i]].push_back(i);
     }
 
-    int cnt;
     for (int weight = 0; weight <= x; weight++)
     {
-        cnt = 0;
         dp[0][weight] = 0;
         for (int col = 1; col <= m; col++)
         {
-            int take = 0;
             for (auto i : colNos[col])
             {
                 if (w[i] <= weight && dp[col - 1][weight - w[i]] != -1)
                 {
-                    take = 1;
                     dp[col][weight] =
                         max(dp[col][weight], w[i] + dp[col - 1][weight - w[i]]);
                 }
             }
-            cnt += take;
         }
     }
 
-    if (cnt != m)
+    if (dp[m][x] == -1)
     {
         return -1;
     }
