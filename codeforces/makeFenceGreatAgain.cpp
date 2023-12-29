@@ -132,7 +132,7 @@ void fill(Primitive Value, Complex &C, ComplexObjects &...list)
 void solve()
 {
 
-    int n;
+   int n;
     cin >> n;
     int a[n + 1], b[n + 1], dp[n + 1][3];
     memset(a, 0, sizeof(a)), memset(b, 0, sizeof(b)), memset(dp, 0, sizeof(dp));
@@ -141,21 +141,35 @@ void solve()
         cin >> a[i + 1] >> b[i + 1];
     }
 
+    int pjump = 0, pmn = 0, psmn = 0;//previous jump, previous minimum, previous second minimum
     for (int i = 1; i <= n; i++)
     {
+        int cmn = INF, csmn = INF, cjump; //current minimum, current second minimum, current jump
         for (int j = 0; j <= 2; j++)
         {
-            dp[i][j] = INF;
-            for (int k = 0; k <= 2; k++)
+            if (a[i] - a[i-1] == pjump - j)
             {
-                if (a[i] - a[i - 1] != k - j)
-                {
-                    dp[i][j] = min(dp[i][j], dp[i - 1][k] + j * b[i]);
-                }
+                dp[i][j] = psmn + j * b[i];
+            }
+            else
+            {
+                dp[i][j] = pmn + j * b[i];
+            }
+
+            if (dp[i][j] < cmn)
+            {
+                csmn = cmn;
+                cmn = dp[i][j];
+                cjump = j;
+            }
+            else if (dp[i][j] < csmn)
+            {
+                csmn = dp[i][j];
             }
         }
+        pmn = cmn, psmn = csmn, pjump = cjump;
     }
-    print(min({dp[n][0], dp[n][1], dp[n][2]}));
+    print(pmn);
 }
 
 signed main()
