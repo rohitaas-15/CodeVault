@@ -134,37 +134,37 @@ void solve()
 
    int n;
     cin >> n;
-    int a[n + 1], b[n + 1], dp[n + 1][3];
-    memset(a, 0, sizeof(a)), memset(b, 0, sizeof(b)), memset(dp, 0, sizeof(dp));
+    int a[n + 1], b[n + 1];
+    memset(a, 0, sizeof(a)), memset(b, 0, sizeof(b));
     for (int i = 0; i < n; i++)
     {
         cin >> a[i + 1] >> b[i + 1];
     }
 
-    int pjump = 0, pmn = 0, psmn = 0;//previous jump, previous minimum, previous second minimum
+    int pjump = 0, pmn = 0, psmn = 0;
     for (int i = 1; i <= n; i++)
     {
-        int cmn = INF, csmn = INF, cjump; //current minimum, current second minimum, current jump
+        int cmn = INF, csmn = INF, cjump, ans;
         for (int j = 0; j <= 2; j++)
         {
-            if (a[i] - a[i-1] == pjump - j)
+            if (a[i] - a[i - 1] == pjump - j)
             {
-                dp[i][j] = psmn + j * b[i];
+                ans = psmn + j * b[i];
             }
             else
             {
-                dp[i][j] = pmn + j * b[i];
+                ans = pmn + j * b[i];
             }
 
-            if (dp[i][j] < cmn)
+            if (ans < cmn)
             {
                 csmn = cmn;
-                cmn = dp[i][j];
+                cmn = ans;
                 cjump = j;
             }
-            else if (dp[i][j] < csmn)
+            else if (ans < csmn)
             {
-                csmn = dp[i][j];
+                csmn = ans;
             }
         }
         pmn = cmn, psmn = csmn, pjump = cjump;
