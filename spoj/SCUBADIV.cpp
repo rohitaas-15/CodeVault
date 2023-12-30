@@ -135,7 +135,7 @@ void solve()
         cin >> cylo[i + 1] >> cyln[i + 1] >> weight[i + 1];
     }
 
-    int dp[oxy + 2][nit + 2];
+    int dp[oxy + 2][nit + 2]; //any value of pair of oxygen and nitrogen greater than i and j should also be included in the minimum answer
     for (int j = 0; j <= oxy + 1; j++)
     {
         for (int k = 0; k <= nit + 1; k++)
