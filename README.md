@@ -1,1 +1,1 @@
-# solutions-of-coding-questions
+# Solutions to various challenging coding problems, with the level of difficulty as the commit message.
