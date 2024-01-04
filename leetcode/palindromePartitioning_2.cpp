@@ -1,5 +1,6 @@
 //https://leetcode.com/problems/palindrome-partitioning-ii/submissions/
-
+#include <bits/stdc++.h>
+using namespace std;
 
 class Solution {
 public:
