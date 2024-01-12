@@ -133,7 +133,7 @@ void solve()
         return;
     }
 
-    vector<int> dp(N, 0);
+    vector<int> dp(N, 0); //the best answer will come when GCD is 2
     dp[1] = 2 * (v[1] % 2);
     for (int i = 2; i <= n; i++)
     {
