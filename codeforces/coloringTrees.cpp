@@ -141,15 +141,15 @@ void solve()
         dp[0][0][i] = 0;
     }
 
-    for (int j = 1; j <= K; j++)
+    for (int j = 1; j <= K; j++) //number of splits
     {
-        for (int i = 1; i <= n; i++)
+        for (int i = 1; i <= n; i++) //treeNo.
         {
             if (!color[i])
             {
-                for (int k = 1; k <= m; k++)
+                for (int k = 1; k <= m; k++) //current tree's color
                 {
-                    for (int l = 0; l <= m; l++)
+                    for (int l = 0; l <= m; l++) //previous tree's color
                     {
                         if (l == k)
                         {
@@ -164,7 +164,7 @@ void solve()
             }
             else
             {
-                for (int l = 0; l <= m; l++)
+                for (int l = 0; l <= m; l++) //previous tree's color
                 {
                     if (l == color[i])
                     {
