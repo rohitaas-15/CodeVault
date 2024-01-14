@@ -115,7 +115,7 @@ using indexed_map =
 const int N = 2002, M = 1e9 + 7;
 int dp[N][2][2][2][N], m, d;
 string s;
-int count(int index, int zero, int even, int last, int sum)
+int count(int index, int zero, int even, int last, int sum) //if the number is 0 till now, then even place has still not arised
 {
     if (index == s.size())
         return sum == 0;
