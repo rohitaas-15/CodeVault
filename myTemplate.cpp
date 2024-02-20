@@ -1,34 +1,3 @@
-/*You are given a graph with 𝑛
- nodes and 𝑚
- directed edges. One lowercase letter is assigned to each node. We define a path's value as the number of the most frequently occurring letter. For example, if letters on a path are "abaca", then the value of that path is 3
-. Your task is find a path whose value is the largest.
-
-Input
-The first line contains two positive integers 𝑛,𝑚
- (1≤𝑛,𝑚≤300000
-), denoting that the graph has 𝑛
- nodes and 𝑚
- directed edges.
-
-The second line contains a string 𝑠
- with only lowercase English letters. The 𝑖
--th character is the letter assigned to the 𝑖
--th node.
-
-Then 𝑚
- lines follow. Each line contains two integers 𝑥,𝑦
- (1≤𝑥,𝑦≤𝑛
-), describing a directed edge from 𝑥
- to 𝑦
-. Note that 𝑥
- can be equal to 𝑦
- and there can be multiple edges between 𝑥
- and 𝑦
-. Also the graph can be not connected.
-
-Output
-Output a single line with a single integer denoting the largest value. If the value can be arbitrarily large, output -1 instead.
-https://codeforces.com/contest/919/problem/D*/
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
