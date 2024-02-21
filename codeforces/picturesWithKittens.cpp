@@ -218,7 +218,7 @@ void solve()
             {
                 dp[pic][i] = beauty[i - 1] + query;
             }
-            prev.update(0, n, 0, i, dp[pic][i]);
+            prev.update(0, n, 0, i, dp[pic][i]); //for the next iteration of querying
         }
     }
 
