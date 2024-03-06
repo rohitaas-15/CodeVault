@@ -1,153 +1,96 @@
+//{ Driver Code Starts
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
-long long int _debug = 0, _nested = 0, _t = 1, INF = 1e18 + 2;
-// macros-------------------------------------------------------------------------------
-#define ll long long
-#define int ll
-#define all(x) x.begin(), x.end()
-#define rep(i, x, n) for (int(i) = (x); (i) < (n); (i)++)
-#define endl "\n"
-#define nl        \
-    cout << endl; \
-    if (_debug)   \
-        cerr << endl;
 
-// print
-// helper-------------------------------------------------------------------------------
-template <typename Primitive>
-void print(Primitive &&P)
-{
-    cout << P << " ";
-    if (_debug)
-        cerr << P << " ";
-    if (!_nested)
-        nl;
-}
-template <typename Complex>
-void print(vector<Complex> &Vector)
-{
-    _nested = 1;
-    for (Complex &C : Vector)
-        print(C);
-    nl;
-    _nested = 0;
-}
-template <typename Complex, typename... ComplexObjects>
-void print(Complex &&C, ComplexObjects &&...list)
-{
-    _nested = 1, print(C);
-    _nested = 0, print(list...);
-}
 
-// scan
-// helper-------------------------------------------------------------------------------
-template <typename Primitive>
-void scan(Primitive &P)
-{
-    cin >> P;
-}
-template <typename Complex>
-void scan(vector<Complex> &Vector)
-{
-    for (Complex &C : Vector)
-        scan(C);
-}
-template <typename Complex, typename... ComplexObjects>
-void scan(Complex &C, ComplexObjects &...list)
-{
-    scan(C), scan(list...);
-}
+// } Driver Code Ends
 
-// fill bulk
-// data--------------------------------------------------------------------------------
-template <typename Primitive>
-void fill(Primitive Value, Primitive &P)
+const long N = 5e5 + 2;
+long p2[N];
+long p2M2[N]; //((2^i)^(M-2))%M
+int cnt = 0;
+const long M = 1e9 + 7;
+long power(long a, long b)
 {
-    P = Value;
-}
-template <typename Primitive, typename Complex>
-void fill(Primitive Value, vector<Complex> &Vector)
-{
-    for (Complex &C : Vector)
-        fill(Value, C);
-}
-template <typename Primitive, typename Complex, typename... ComplexObjects>
-void fill(Primitive Value, Complex &C, ComplexObjects &...list)
-{
-    fill(Value, C), fill(Value, list...);
-}
-
-// policy based data
-// structures---------------------------------------------------------------------------
-template <typename T>
-using indexed_set =
-    tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
-template <typename T1, typename T2>
-using indexed_map =
-    tree<T1, T2, less<T1>, rb_tree_tag, tree_order_statistics_node_update>;
-
-// code----------------------------------------------------------------------------------
-
-const int M = 1e9 + 7;
-int power(int a, int b, int M = LLONG_MAX)
-{
-    if (!b)
+    if (b == 0)
         return 1;
-    int sp = power(a, b / 2, M);
-    sp = (sp * sp) % M;
-    if (b & 1)
-        return ((a % M) * sp) % M;
-    else
-        return sp;
+    if (b == 1)
+        return a;
+    long sp = (power(a, b / 2));
+    return ((sp * sp) % M * power(a, b % 2)) % M;
 }
 
-int modularDivision(int a, int b, int M /*M should be prime*/)
+class Solution
 {
-    a %= M;
-    return (a * power(b, M - 2, M)) % M;
-}
-void solve()
-{
-    string s, pattern;
-    cin >> s >> pattern;
-    int n = s.size(), len = pattern.size();
-    int patHash = 0, checkHash = 0;
-    vector<int> ans;
-    for (int i = 0; i < len; i++)
+public:
+    vector<int> search(string pattern, string text)
     {
-        checkHash = (checkHash + (s[i] - 'a') * (1ll << i)) % M;
-        patHash = (patHash + (pattern[i] - 'a') * (1ll << i)) % M;
-    }
-    if (checkHash == patHash && s.substr(0, len) == pattern)
-    {
-        ans.push_back(0);
-    }
-    for (int i = len; i < n; i++)
-    {
-        checkHash = (checkHash + (s[i] - 'a') * (1ll << len)) % M;
-        checkHash = (checkHash - (s[i - len] - 'a') + M) % M;
-        checkHash = modularDivision(checkHash, 2, M);
+        vector<int> ans;
 
-        if (checkHash == patHash && s.substr(i - len + 1, len) == pattern)
+        if (!cnt)
         {
-            ans.push_back(i - len + 1);
+            p2[0] = p2M2[0] = 1;
+            for (int i = 1; i < N; i++)
+            {
+                p2[i] = (p2[i - 1] * 2ll) % M;
+            }
+
+            long _2M2 = power(2, M - 2);
+
+            for (int i = 1; i < N; i++)
+            {
+                p2M2[i] = (p2M2[i - 1] * _2M2) % M;
+            }
+            cnt++;
         }
+
+        int m = pattern.size(), n = text.size();
+        long patHash = 0;
+        long textHash = 0;
+        for (int i = 0; i < m; i++)
+        {
+            patHash = (patHash + ((pattern[i] - 'a' + 1) * p2[i]) % M) % M;
+            textHash = (textHash + ((text[i] - 'a' + 1) * p2[i]) % M) % M;
+        }
+
+        if (patHash == textHash && text.substr(0, m) == pattern)
+        {
+            ans.push_back(1);
+        }
+
+        for (int i = m; i < n; i++)
+        {
+            textHash = (textHash - (((text[i - m] - 'a' + 1) * p2[i - m]) % M) + M) % M;
+            textHash = (textHash + ((text[i] - 'a' + 1) * p2[i]) % M) % M;
+            long thisHash = (textHash * p2M2[i - m + 1]) % M;
+
+            if (thisHash == patHash && text.substr(i - m + 1, m) == pattern)
+            {
+                ans.push_back(i - m + 2);
+            }
+        }
+        return ans;
     }
-    print(ans);
-}
+};
 
-signed main()
+//{ Driver Code Starts.
+int main()
 {
-    ios_base::sync_with_stdio(false), cin.tie(NULL);
-    // cin >> _t;
-    for (int tc = 1; tc <= _t; tc++)
-        solve();
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        string S, pat;
+        cin >> S >> pat;
+        Solution ob;
+        vector<int> res = ob.search(pat, S);
+        for (int i : res)
+            cout << i << " ";
+        cout << endl;
+    }
+    return 0;
 }
 
-// cin does not move the input cursor to the next line, use cin.ignore() to
-// move it to the next line use an array instead of an int whenever possible,
-// for coding competitions
+// Contributed By: Pranay Bansal
+
+// } Driver Code Ends
